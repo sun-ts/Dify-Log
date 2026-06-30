@@ -1,18 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
-	"dify-log-excel/internal/version"
+	"dify-log-excel/internal/cli"
 )
 
 func main() {
-	if len(os.Args) > 1 && os.Args[1] == "version" {
-		fmt.Println(version.Version)
-		return
-	}
-
-	fmt.Fprintln(os.Stderr, "usage: dify-log-excel <serve|sync|status|version>")
-	os.Exit(2)
+	os.Exit(cli.Run(os.Args[1:], cli.ExecutableDir(), os.Stdout, os.Stderr))
 }
