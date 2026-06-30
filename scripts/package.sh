@@ -19,7 +19,7 @@ build_one() {
   local ext="$4"
   local archive_ext="$5"
   local package_name="${APP_NAME}-${label}-${goarch}"
-  local package_dir="$DIST/$package_name/$APP_NAME"
+  local package_dir="$DIST/$package_name"
   mkdir -p "$package_dir/data" "$package_dir/logs"
 
   local binary="$APP_NAME$ext"
@@ -35,9 +35,9 @@ build_one() {
   touch "$package_dir/data/.gitkeep" "$package_dir/logs/.gitkeep"
 
   if [[ "$archive_ext" == "zip" ]]; then
-    (cd "$DIST/$package_name" && zip -qr "../$package_name.zip" "$APP_NAME")
+    (cd "$DIST" && zip -qr "$package_name.zip" "$package_name")
   else
-    (cd "$DIST/$package_name" && tar -czf "../$package_name.tar.gz" "$APP_NAME")
+    (cd "$DIST" && tar -czf "$package_name.tar.gz" "$package_name")
   fi
 }
 
