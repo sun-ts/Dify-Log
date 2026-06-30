@@ -44,6 +44,7 @@ build_one() {
 build_one darwin arm64 macos "" zip
 build_one darwin amd64 macos "" zip
 build_one linux amd64 linux "" tar.gz
+build_one linux arm64 linux "" tar.gz
 build_one windows amd64 windows ".exe" zip
 
 cd "$DIST"
