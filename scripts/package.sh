@@ -31,6 +31,7 @@ build_one() {
   cp "$ROOT/config.toml" "$package_dir/config.toml"
   cp "$ROOT/config.example.toml" "$package_dir/config.example.toml"
   cp "$ROOT/README.md" "$package_dir/README.md"
+  cp "$ROOT/README.zh-CN.md" "$package_dir/README.zh-CN.md"
   cp "$ROOT/scripts/start.sh" "$package_dir/start.sh"
   cp "$ROOT/scripts/start.command" "$package_dir/start.command"
   cp "$ROOT/scripts/start.bat" "$package_dir/start.bat"

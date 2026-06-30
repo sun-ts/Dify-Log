@@ -2,6 +2,8 @@
 
 Portable Dify workflow log receiver. It runs as a local command-line tool, buffers logs in SQLite, and writes daily Excel files under `logs/`.
 
+Chinese documentation: [README.zh-CN.md](README.zh-CN.md)
+
 ## Run
 
 Download the package for your system and unzip it anywhere. The app always uses the folder that contains the executable as its home directory, no matter which directory your terminal is currently in.

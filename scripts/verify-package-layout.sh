@@ -24,6 +24,7 @@ verify_package_dir() {
   [[ -f "$package_dir/config.toml" ]] || { error "config.toml is missing"; return 1; }
   [[ -f "$package_dir/config.example.toml" ]] || { error "config.example.toml is missing"; return 1; }
   [[ -f "$package_dir/README.md" ]] || { error "README.md is missing"; return 1; }
+  [[ -f "$package_dir/README.zh-CN.md" ]] || { error "README.zh-CN.md is missing"; return 1; }
   [[ -d "$package_dir/data" ]] || { error "data directory is missing"; return 1; }
   [[ -d "$package_dir/logs" ]] || { error "logs directory is missing"; return 1; }
   [[ -f "$package_dir/start.bat" ]] || { error "start.bat is missing"; return 1; }
@@ -96,7 +97,7 @@ make_fake_package() {
   local binary_name="$2"
 
   mkdir -p "$package_dir/data" "$package_dir/logs"
-  touch "$package_dir/config.toml" "$package_dir/config.example.toml" "$package_dir/README.md" "$package_dir/start.bat"
+  touch "$package_dir/config.toml" "$package_dir/config.example.toml" "$package_dir/README.md" "$package_dir/README.zh-CN.md" "$package_dir/start.bat"
   printf '#!/usr/bin/env sh\n' > "$package_dir/start.sh"
   printf '#!/usr/bin/env sh\n' > "$package_dir/start.command"
   printf '#!/usr/bin/env sh\n' > "$package_dir/$binary_name"
