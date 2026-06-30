@@ -4,7 +4,16 @@ Portable Dify workflow log receiver. It runs as a local command-line tool, buffe
 
 ## Run
 
-Command line:
+Download the package for your system and unzip it anywhere. The app always uses the folder that contains the executable as its home directory, no matter which directory your terminal is currently in.
+
+Examples:
+
+```bash
+./dify-log-excel-macos-arm64/dify-log-excel serve
+/Users/bling/Tools/dify-log-excel-macos-arm64/dify-log-excel serve
+```
+
+If your terminal is already inside the extracted folder:
 
 ```bash
 ./dify-log-excel serve
@@ -13,7 +22,8 @@ Command line:
 Windows:
 
 ```bat
-start.bat
+dify-log-excel-windows-amd64\dify-log-excel.exe serve
+dify-log-excel-windows-amd64\start.bat
 ```
 
 macOS:

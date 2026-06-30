@@ -5,6 +5,9 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST="$ROOT/dist"
 APP_NAME="dify-log-excel"
 GO_BIN="${GO_BIN:-go}"
+VERIFY_LAYOUT="$ROOT/scripts/verify-package-layout.sh"
+HOST_GOOS="$("$GO_BIN" env GOOS)"
+HOST_GOARCH="$("$GO_BIN" env GOARCH)"
 
 rm -rf "$DIST"
 mkdir -p "$DIST"
@@ -33,11 +36,16 @@ build_one() {
   cp "$ROOT/scripts/start.bat" "$package_dir/start.bat"
   chmod +x "$package_dir/start.sh" "$package_dir/start.command" || true
   touch "$package_dir/data/.gitkeep" "$package_dir/logs/.gitkeep"
+  "$VERIFY_LAYOUT" "$package_dir" "$binary"
 
   if [[ "$archive_ext" == "zip" ]]; then
     (cd "$DIST" && zip -qr "$package_name.zip" "$package_name")
   else
     (cd "$DIST" && tar -czf "$package_name.tar.gz" "$package_name")
+  fi
+
+  if [[ "$goos" == "$HOST_GOOS" && "$goarch" == "$HOST_GOARCH" ]]; then
+    "$VERIFY_LAYOUT" "$package_dir" "$binary" --run
   fi
 }
 
