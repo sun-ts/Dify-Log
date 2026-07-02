@@ -6,4 +6,4 @@ if [ -x "$SCRIPT_DIR/dify-log-excel" ]; then
 else
   cd "$SCRIPT_DIR/.."
 fi
-./dify-log-excel serve
+./dify-log-excel start

@@ -3,7 +3,6 @@ package logentry
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -14,24 +13,24 @@ import (
 const MaskValue = "***MASKED***"
 
 type Request struct {
-	ExecutionID  string         `json:"execution_id"`
-	WorkflowID   string         `json:"workflow_id"`
-	WorkflowName string         `json:"workflow_name"`
-	AppID        string         `json:"app_id"`
-	AppName      string         `json:"app_name"`
-	NodeID       string         `json:"node_id"`
-	NodeName     string         `json:"node_name"`
-	NodeType     string         `json:"node_type"`
-	SequenceNo   *int           `json:"sequence_no"`
-	Status       string         `json:"status"`
-	InputData    map[string]any `json:"input_data"`
-	OutputData   map[string]any `json:"output_data"`
-	ErrorMessage string         `json:"error_message"`
-	ErrorDetail  string         `json:"error_detail"`
-	StartedAt    *time.Time     `json:"started_at"`
-	FinishedAt   *time.Time     `json:"finished_at"`
-	DurationMS   *int64         `json:"duration_ms"`
-	Metadata     map[string]any `json:"metadata"`
+	ExecutionID  string     `json:"execution_id"`
+	WorkflowID   string     `json:"workflow_id"`
+	WorkflowName string     `json:"workflow_name"`
+	AppID        string     `json:"app_id"`
+	AppName      string     `json:"app_name"`
+	NodeID       string     `json:"node_id"`
+	NodeName     string     `json:"node_name"`
+	NodeType     string     `json:"node_type"`
+	SequenceNo   *int       `json:"sequence_no"`
+	Status       string     `json:"status"`
+	InputData    any        `json:"input_data"`
+	OutputData   any        `json:"output_data"`
+	ErrorMessage string     `json:"error_message"`
+	ErrorDetail  string     `json:"error_detail"`
+	StartedAt    *time.Time `json:"started_at"`
+	FinishedAt   *time.Time `json:"finished_at"`
+	DurationMS   *int64     `json:"duration_ms"`
+	Metadata     any        `json:"metadata"`
 }
 
 type Record struct {
@@ -68,10 +67,10 @@ func Parse(body []byte, maskFields []string, loc *time.Location) (Record, error)
 
 	now := time.Now().In(loc)
 	if strings.TrimSpace(req.NodeID) == "" {
-		return Record{}, errors.New("node_id is required")
+		req.NodeID = "http_request"
 	}
 	if strings.TrimSpace(req.NodeName) == "" {
-		return Record{}, errors.New("node_name is required")
+		req.NodeName = "HTTP Request"
 	}
 	if req.ExecutionID == "" {
 		req.ExecutionID = uuid.NewString()

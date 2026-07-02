@@ -26,6 +26,7 @@ verify_package_dir() {
   [[ -f "$package_dir/README.md" ]] || { error "README.md is missing"; return 1; }
   [[ -f "$package_dir/README.zh-CN.md" ]] || { error "README.zh-CN.md is missing"; return 1; }
   [[ -d "$package_dir/data" ]] || { error "data directory is missing"; return 1; }
+  [[ -d "$package_dir/data/excel" ]] || { error "data/excel directory is missing"; return 1; }
   [[ -d "$package_dir/logs" ]] || { error "logs directory is missing"; return 1; }
   [[ -f "$package_dir/start.bat" ]] || { error "start.bat is missing"; return 1; }
   [[ -f "$package_dir/start.sh" ]] || { error "start.sh is missing"; return 1; }
@@ -59,8 +60,13 @@ run_portability_smoke() {
     echo "$status_output" >&2
     return 1
   fi
-  if [[ "$status_output" != *"excel_dir=$abs_package_dir/logs"* ]]; then
+  if [[ "$status_output" != *"excel_dir=$abs_package_dir/data/excel"* ]]; then
     error "status from arbitrary cwd did not use executable directory as excel_dir"
+    echo "$status_output" >&2
+    return 1
+  fi
+  if [[ "$status_output" != *"log_dir=$abs_package_dir/logs"* ]]; then
+    error "status from arbitrary cwd did not use executable directory as log_dir"
     echo "$status_output" >&2
     return 1
   fi
@@ -96,7 +102,7 @@ make_fake_package() {
   local package_dir="$1"
   local binary_name="$2"
 
-  mkdir -p "$package_dir/data" "$package_dir/logs"
+  mkdir -p "$package_dir/data/excel" "$package_dir/logs"
   touch "$package_dir/config.toml" "$package_dir/config.example.toml" "$package_dir/README.md" "$package_dir/README.zh-CN.md" "$package_dir/start.bat"
   printf '#!/usr/bin/env sh\n' > "$package_dir/start.sh"
   printf '#!/usr/bin/env sh\n' > "$package_dir/start.command"

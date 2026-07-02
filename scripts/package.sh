@@ -23,20 +23,20 @@ build_one() {
   local archive_ext="$5"
   local package_name="${APP_NAME}-${label}-${goarch}"
   local package_dir="$DIST/$package_name"
-  mkdir -p "$package_dir/data" "$package_dir/logs"
+  mkdir -p "$package_dir/data/excel" "$package_dir/logs"
 
   local binary="$APP_NAME$ext"
   GOOS="$goos" GOARCH="$goarch" CGO_ENABLED=0 "$GO_BIN" build -o "$package_dir/$binary" ./cmd/dify-log-excel
 
-  cp "$ROOT/config.toml" "$package_dir/config.toml"
+  cp "$ROOT/config.example.toml" "$package_dir/config.toml"
   cp "$ROOT/config.example.toml" "$package_dir/config.example.toml"
   cp "$ROOT/README.md" "$package_dir/README.md"
   cp "$ROOT/README.zh-CN.md" "$package_dir/README.zh-CN.md"
   cp "$ROOT/scripts/start.sh" "$package_dir/start.sh"
   cp "$ROOT/scripts/start.command" "$package_dir/start.command"
   cp "$ROOT/scripts/start.bat" "$package_dir/start.bat"
-  chmod +x "$package_dir/start.sh" "$package_dir/start.command" || true
-  touch "$package_dir/data/.gitkeep" "$package_dir/logs/.gitkeep"
+  chmod +x "$package_dir/$binary" "$package_dir/start.sh" "$package_dir/start.command"
+  touch "$package_dir/data/.gitkeep" "$package_dir/data/excel/.gitkeep" "$package_dir/logs/.gitkeep"
   "$VERIFY_LAYOUT" "$package_dir" "$binary"
 
   if [[ "$archive_ext" == "zip" ]]; then

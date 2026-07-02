@@ -40,10 +40,40 @@ func TestParseRequestGeneratesExecutionIDAndMasksFields(t *testing.T) {
 	}
 }
 
-func TestParseRejectsMissingNodeFields(t *testing.T) {
-	_, err := Parse([]byte(`{"node_id": ""}`), nil, time.UTC)
-	if err == nil {
-		t.Fatal("expected missing node fields to fail")
+func TestParseDefaultsMissingNodeFields(t *testing.T) {
+	record, err := Parse([]byte(`{"workflow_name":"前端调用","input_data":{"question":"hello"}}`), nil, time.UTC)
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+	if record.NodeID != "http_request" {
+		t.Fatalf("NodeID = %q", record.NodeID)
+	}
+	if record.NodeName != "HTTP Request" {
+		t.Fatalf("NodeName = %q", record.NodeName)
+	}
+}
+
+func TestParseAcceptsNonObjectDataFields(t *testing.T) {
+	body := []byte(`{
+		"node_id": "frontend",
+		"node_name": "前端调用",
+		"input_data": "plain text input",
+		"output_data": ["item1", "item2"],
+		"metadata": 123
+	}`)
+
+	record, err := Parse(body, []string{"password"}, time.UTC)
+	if err != nil {
+		t.Fatalf("Parse returned error: %v", err)
+	}
+	if record.InputJSON != `"plain text input"` {
+		t.Fatalf("InputJSON = %s", record.InputJSON)
+	}
+	if record.OutputJSON != `["item1","item2"]` {
+		t.Fatalf("OutputJSON = %s", record.OutputJSON)
+	}
+	if record.MetadataJSON != `123` {
+		t.Fatalf("MetadataJSON = %s", record.MetadataJSON)
 	}
 }
 
