@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+DIST="$ROOT/dist"
+APP_NAME="dify-log-excel"
+GO_BIN="${GO_BIN:-go}"
+VERIFY_LAYOUT="$ROOT/scripts/verify-package-layout.sh"
+HOST_GOOS="$("$GO_BIN" env GOOS)"
+HOST_GOARCH="$("$GO_BIN" env GOARCH)"
+
+rm -rf "$DIST"
+mkdir -p "$DIST"
+
+cd "$ROOT"
+"$GO_BIN" test ./...
+
+build_one() {
+  local goos="$1"
+  local goarch="$2"
+  local label="$3"
+  local ext="$4"
+  local archive_ext="$5"
+  local package_name="${APP_NAME}-${label}-${goarch}"
+  local package_dir="$DIST/$package_name"
+  mkdir -p "$package_dir/data/excel" "$package_dir/logs"
+
+  local binary="$APP_NAME$ext"
+  GOOS="$goos" GOARCH="$goarch" CGO_ENABLED=0 "$GO_BIN" build -o "$package_dir/$binary" ./cmd/dify-log-excel
+
+  cp "$ROOT/config.example.toml" "$package_dir/config.toml"
+  cp "$ROOT/config.example.toml" "$package_dir/config.example.toml"
+  cp "$ROOT/README.md" "$package_dir/README.md"
+  cp "$ROOT/README.zh-CN.md" "$package_dir/README.zh-CN.md"
+  cp "$ROOT/scripts/start.sh" "$package_dir/start.sh"
+  cp "$ROOT/scripts/start.command" "$package_dir/start.command"
+  cp "$ROOT/scripts/start.bat" "$package_dir/start.bat"
+  chmod +x "$package_dir/$binary" "$package_dir/start.sh" "$package_dir/start.command"
+  touch "$package_dir/data/.gitkeep" "$package_dir/data/excel/.gitkeep" "$package_dir/logs/.gitkeep"
+  "$VERIFY_LAYOUT" "$package_dir" "$binary"
+
+  if [[ "$archive_ext" == "zip" ]]; then
+    (cd "$DIST" && zip -qr "$package_name.zip" "$package_name")
+  else
+    (cd "$DIST" && tar -czf "$package_name.tar.gz" "$package_name")
+  fi
+
+  if [[ "$goos" == "$HOST_GOOS" && "$goarch" == "$HOST_GOARCH" ]]; then
+    "$VERIFY_LAYOUT" "$package_dir" "$binary" --run
+  fi
+}
+
+build_one darwin arm64 macos "" zip
+build_one darwin amd64 macos "" zip
+build_one linux amd64 linux "" tar.gz
+build_one linux arm64 linux "" tar.gz
+build_one windows amd64 windows ".exe" zip
+
+cd "$DIST"
+if command -v shasum >/dev/null 2>&1; then
+  shasum -a 256 *.zip *.tar.gz > SHA256SUMS
+elif command -v sha256sum >/dev/null 2>&1; then
+  sha256sum *.zip *.tar.gz > SHA256SUMS
+fi
+
+find "$DIST" -maxdepth 1 -type f -name "${APP_NAME}-*" -print

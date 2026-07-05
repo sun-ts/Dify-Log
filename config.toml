@@ -1,0 +1,12 @@
+host = "0.0.0.0"
+port = 9999
+log_api_key = "chenyongjingsuntuo198587@"
+data_dir = "./data"
+excel_dir = "./data/excel"
+log_enabled = true
+log_level = "info"
+log_dir = "./logs"
+log_body = true
+timezone = "Asia/Shanghai"
+sync_interval_seconds = 5
+mask_fields = ["password"]

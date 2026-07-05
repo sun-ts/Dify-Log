@@ -1,0 +1,7 @@
+.worktrees/
+dist/
+data/
+logs/
+*.db
+/dify-log-excel
+/dify-log-excel.exe
