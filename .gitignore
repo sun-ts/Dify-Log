@@ -1,5 +1,6 @@
 .worktrees/
 data/
+superpowers/
 logs/
 *.db
 /dify-log-excel
