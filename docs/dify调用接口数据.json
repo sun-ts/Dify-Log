@@ -1,0 +1,63 @@
+{
+  "workflow_name": "营销稽核选表工作流",
+  "node_id": "select_tablename",
+  "node_name": "选表工作流",
+  "sequence_no": 1,
+  "status": "success",
+  "input_data": {
+    "step2":{
+      "用户规则":{{#1782208593282.USER_RULE#}}
+    },
+    "step3":{
+      "rule_text":{{#1782208593282.USER_RULE#}},
+      "rewrite_result":{{#1782660778206.structured_output#}}
+    },
+    "step4":{
+      "retrieval_query": {{#1782661399378.retrieval_query#}}
+    },
+    "step5":{
+      "rule_text":{{#1782208593282.USER_RULE#}},
+      "data_items":{{#1782661399378.data_items#}},
+      "result":{{#1782658308781.result#}}
+    },
+    "step6":{
+      "用户规则": {{#1782208593282.USER_RULE#}},
+      "候选表证据": {{#1782661178365.candidate_evidence_text#}}
+    },
+    "step7":{
+      "用户规则": {{#1782208593282.USER_RULE#}},
+      "候选表证据": {{#1782661178365.candidate_evidence_text#}},
+      "待校验选表结果": {{#1782664662250.text#}}
+    },
+    "step8":{
+      "final_selection": {{#1782274600865.text#}},
+      "check_result": {{#1782664662250.text#}}
+    }
+  },
+  "output_data": {
+    "step2":{
+      "structured_output":{{#1782660778206.structured_output#}}
+    },
+    "step3":{
+      "normalized_rule":{{#1782661399378.normalized_rule#}},
+      "data_items":{{#1782661399378.data_items#}},
+      "retrieval_query":{{#1782661399378.retrieval_query#}}
+    },
+    "step4":{
+      "result":{{#1782658308781.result#}}
+    },
+    "step5":{
+      "candidate_evidence_text":{{#1782661178365.candidate_evidence_text#}}
+    },
+    "step6":{
+      "text":{{#1782274600865.text#}}
+    },
+    "step7":{
+      "text":{{#1782664662250.text#}}
+    },
+    "step8":{
+      "result":{{#1782664678300.result#}},
+      "result_text":{{#1782664678300.result_text#}}
+    }
+  }
+}
